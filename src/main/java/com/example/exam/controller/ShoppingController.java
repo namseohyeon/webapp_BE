@@ -80,9 +80,12 @@ public class ShoppingController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchitem(@RequestParam("title") String title) {
+    public ResponseEntity<?> searchitem(@RequestBody ShoppingDTO dto) {
         // String temporaryUserId = "temporary-user";
-        List<ShoppingEntity> entities = service.search(title);
+        String temporaryUserId = "seohyeonnam";
+        ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
+        entity.setUserId(temporaryUserId);
+        List<ShoppingEntity> entities = service.search(entity);
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
 
         ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();

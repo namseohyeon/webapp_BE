@@ -40,8 +40,8 @@ public class ShoppingService {
 
     }
 
-    public List<ShoppingEntity> search(String title){
-        return repository.findByTitle(title);
+    public List<ShoppingEntity> search(final ShoppingEntity entity){
+        return repository.findByTitle(entity.getTitle());
 
     }
 
