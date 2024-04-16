@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.exam.dto.ResponseDTO;
+import com.example.exam.dto.ResponseDTO1;
 import com.example.exam.dto.ShoppingDTO;
 import com.example.exam.model.ShoppingEntity;
 import com.example.exam.service.ShoppingService;
@@ -95,6 +96,25 @@ public class ShoppingController {
         return ResponseEntity.ok().body(response);
     }
 
+    // @PutMapping
+    // public ResponseEntity<?> updateitem(@RequestBody ShoppingDTO dto){
+    //     String temporaryUserId = "seohyeonnam";
+    //     ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
+    //     entity.setUserId(temporaryUserId);
+
+    //     ShoppingEntity entities = service.update(entity);
+    //     //ShoppingDTO dtos =entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
+
+    //     ShoppingDTO dtos = new ShoppingDTO(entities);
+        
+    //     List<ShoppingDTO> L_dtos = new ArrayList<>();
+    //     L_dtos.add(dtos);
+
+    //     ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(L_dtos).build();
+
+    //     return ResponseEntity.ok().body(response);
+    // }
+
     @PutMapping
     public ResponseEntity<?> updateitem(@RequestBody ShoppingDTO dto){
         String temporaryUserId = "seohyeonnam";
@@ -106,10 +126,10 @@ public class ShoppingController {
 
         ShoppingDTO dtos = new ShoppingDTO(entities);
         
-        List<ShoppingDTO> L_dtos = new ArrayList<>();
-        L_dtos.add(dtos);
+        //List<ShoppingDTO> L_dtos = new ArrayList<>();
+        //L_dtos.add(dtos);
 
-        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(L_dtos).build();
+        ResponseDTO1<ShoppingDTO> response = ResponseDTO1.<ShoppingDTO>builder().data(dtos).build();
 
         return ResponseEntity.ok().body(response);
     }

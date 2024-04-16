@@ -45,7 +45,23 @@ public class ShoppingService {
 
     }
 
-    public ShoppingEntity update(final ShoppingEntity entity){
+    // public ShoppingEntity update(final ShoppingEntity entity){
+    //     validate(entity);
+    //     final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
+    //     if (orignal.isPresent()){
+    //         final ShoppingEntity shopping = orignal.get();
+    //         shopping.setTitle(entity.getTitle());
+    //         shopping.setPrice(entity.getPrice());
+    //         shopping.setTopic(entity.getTopic());
+
+    //         return repository.save(shopping);
+    //     }
+    //     return null;
+    //     //return repository.findById(entity.getId());
+    //     //return repository.findById(entity.getId());
+    // }
+
+        public ShoppingEntity update(final ShoppingEntity entity){
         validate(entity);
         final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
         if (orignal.isPresent()){
@@ -53,7 +69,6 @@ public class ShoppingService {
             shopping.setTitle(entity.getTitle());
             shopping.setPrice(entity.getPrice());
             shopping.setTopic(entity.getTopic());
-
             return repository.save(shopping);
         }
         return null;

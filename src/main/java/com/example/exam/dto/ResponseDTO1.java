@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ResponseDTO<T>{
+public class ResponseDTO1<T>{
     private String error;
-    private List<T> data;
+    private T data;
 }
-
-
