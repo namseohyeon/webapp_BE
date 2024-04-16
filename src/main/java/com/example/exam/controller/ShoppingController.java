@@ -12,9 +12,11 @@ import com.example.exam.dto.ShoppingDTO;
 import com.example.exam.model.ShoppingEntity;
 import com.example.exam.service.ShoppingService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,13 +101,19 @@ public class ShoppingController {
         ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
         entity.setUserId(temporaryUserId);
 
-        List<ShoppingEntity> entities = service.update(entity);
-        List<ShoppingDTO> dtos =entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
+        ShoppingEntity entities = service.update(entity);
+        //ShoppingDTO dtos =entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
 
-        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
+        ShoppingDTO dtos = new ShoppingDTO(entities);
+        
+        List<ShoppingDTO> L_dtos = new ArrayList<>();
+        L_dtos.add(dtos);
+
+        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(L_dtos).build();
+
         return ResponseEntity.ok().body(response);
     }
-
+    
     @DeleteMapping
     public ResponseEntity<?> deleteitem(@RequestBody ShoppingDTO dto){
         try{

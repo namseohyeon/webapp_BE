@@ -45,7 +45,7 @@ public class ShoppingService {
 
     }
 
-    public List<ShoppingEntity> update(final ShoppingEntity entity){
+    public ShoppingEntity update(final ShoppingEntity entity){
         validate(entity);
         final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
         if (orignal.isPresent()){
@@ -54,9 +54,11 @@ public class ShoppingService {
             shopping.setPrice(entity.getPrice());
             shopping.setTopic(entity.getTopic());
 
-            repository.save(shopping);
+            return repository.save(shopping);
         }
-        return retrieve(entity.getUserId());
+        return null;
+        //return repository.findById(entity.getId());
+        //return repository.findById(entity.getId());
     }
 
     public List<ShoppingEntity> delete(final ShoppingEntity entity){
