@@ -2,6 +2,7 @@ package com.example.exam.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -25,6 +26,6 @@ public class ShoppingEntity{
     private String title;
     private int price;
     private String topic;
-    private String userId;
+    private String userid;
 
 }

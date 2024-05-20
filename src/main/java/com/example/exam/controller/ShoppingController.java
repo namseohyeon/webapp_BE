@@ -50,13 +50,13 @@ public class ShoppingController {
     @PostMapping
     public ResponseEntity<?> createitem(@RequestBody ShoppingDTO dto){
         try{
-        String temporaryUserId = "seohyeonnam";
+        //String temporaryUserId = "seohyeonnam";
 
-        ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
+        ShoppingEntity entity = ShoppingDTO.toEntity(dto);
 
         entity.setId(null);
 
-        entity.setUserId(temporaryUserId);
+        //entity.setUserId(temporaryUserId);
 
         List<ShoppingEntity> entities = service.create(entity);
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
@@ -73,8 +73,8 @@ public class ShoppingController {
 
     @GetMapping
     public ResponseEntity<?> retrieveitemlist() {
-        String temporaryUserId = "seohyeonnam";
-        List<ShoppingEntity> entities = service.retrieve(temporaryUserId);
+        //String temporaryUserId = "seohyeonnam";
+        List<ShoppingEntity> entities = service.retrieve();
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
 
         ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
@@ -82,13 +82,22 @@ public class ShoppingController {
         return ResponseEntity.ok().body(response);
     }
 
+//    @GetMapping("/search")
+//    public ResponseEntity<?> searchitem(@RequestBody ShoppingDTO dto) {
+//        // String temporaryUserId = "temporary-user";
+//        //String temporaryUserId = "seohyeonnam";
+//        ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
+//        //entity.setUserId(temporaryUserId);
+//        List<ShoppingEntity> entities = service.search(entity);
+//        List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
+//
+//        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
+//
+//        return ResponseEntity.ok().body(response);
+//    }
     @GetMapping("/search")
-    public ResponseEntity<?> searchitem(@RequestBody ShoppingDTO dto) {
-        // String temporaryUserId = "temporary-user";
-        String temporaryUserId = "seohyeonnam";
-        ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
-        entity.setUserId(temporaryUserId);
-        List<ShoppingEntity> entities = service.search(entity);
+    public ResponseEntity<?> searchitem(@RequestParam String title) {
+        List<ShoppingEntity> entities = service.search(title);
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
 
         ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
@@ -117,29 +126,21 @@ public class ShoppingController {
 
     @PutMapping
     public ResponseEntity<?> updateitem(@RequestBody ShoppingDTO dto){
-        String temporaryUserId = "seohyeonnam";
-        ShoppingEntity  entity = ShoppingDTO.toEntity(dto);
-        entity.setUserId(temporaryUserId);
-
-        ShoppingEntity entities = service.update(entity);
-        //ShoppingDTO dtos =entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
-
-        ShoppingDTO dtos = new ShoppingDTO(entities);
-        
-        //List<ShoppingDTO> L_dtos = new ArrayList<>();
-        //L_dtos.add(dtos);
-
-        ResponseDTO1<ShoppingDTO> response = ResponseDTO1.<ShoppingDTO>builder().data(dtos).build();
-
+        //String temporaryUserId = "seohyeonnam";
+        ShoppingEntity entity = ShoppingDTO.toEntity(dto);
+        List<ShoppingEntity> entities = service.update(entity);
+        List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
+        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
         return ResponseEntity.ok().body(response);
     }
     
     @DeleteMapping
     public ResponseEntity<?> deleteitem(@RequestBody ShoppingDTO dto){
         try{
-            String temporaryUserId = "seohyeonnam";
-            ShoppingEntity entity = ShoppingDTO.toEntity(dto);
-            entity.setUserId(temporaryUserId);
+            //String temporaryUserId = "seohyeonnam";
+            ShoppingEntity entity = ShoppingDTO.toEntity(dto); 
+            //entity.setUserId(temporaryUserId);
+            System.out.println(entity);
             List<ShoppingEntity> entities = service.delete(entity);
             List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
             ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();

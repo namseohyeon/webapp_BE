@@ -13,14 +13,14 @@ public class ShoppingDTO{
     private String title;
     private int price;
     private String topic;
-    //private String userid;
+    private String userid;
 
     public ShoppingDTO(final ShoppingEntity entity){
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.price = entity.getPrice();
         this.topic = entity.getTopic();
-        //this.userid = entity.getUserid();
+        this.userid = entity.getUserid();
     }
 
     public static ShoppingEntity toEntity(final ShoppingDTO dto){
@@ -29,7 +29,7 @@ public class ShoppingDTO{
             .title(dto.getTitle())
             .price(dto.getPrice())
             .topic(dto.getTopic())
+            .userid(dto.getUserid())
             .build();
-            //.userid(dto.getUserid())
     }
 }

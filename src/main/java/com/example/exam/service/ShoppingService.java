@@ -30,21 +30,22 @@ public class ShoppingService {
         repository.save(entity);
 
         log.info("Enity Id : {} is saved", entity.getId());
-        return repository.findByUserId(entity.getUserId());
+        return repository.findAll();
 
 
     }
 
-    public List<ShoppingEntity> retrieve(final String userId){
-        return repository.findByUserId(userId);
+    public List<ShoppingEntity> retrieve(){
+        return repository.findAll();
 
     }
 
-    public List<ShoppingEntity> search(final ShoppingEntity entity){
-        return repository.findByTitle(entity.getTitle());
+    public List<ShoppingEntity> search(final String title){
+        return repository.findByTitle(title);
 
     }
 
+    //방법1 : 단일 엔터티로 보내고, 컨트롤러에서 리스트로 변환
     // public ShoppingEntity update(final ShoppingEntity entity){
     //     validate(entity);
     //     final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
@@ -61,31 +62,99 @@ public class ShoppingService {
     //     //return repository.findById(entity.getId());
     // }
 
-        public ShoppingEntity update(final ShoppingEntity entity){
+    //방법2: 단일엔터티로 보내고, 단일 엔터티 반환 dto를 다시 제작   
+    //     public ShoppingEntity update(final ShoppingEntity entity){
+    //     validate(entity);
+    //     final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
+    //     if (orignal.isPresent()){
+    //         final ShoppingEntity shopping = orignal.get();
+    //         shopping.setTitle(entity.getTitle());
+    //         shopping.setPrice(entity.getPrice());
+    //         shopping.setTopic(entity.getTopic());
+    //         return repository.save(shopping);
+    //     }
+    //     return null;
+    // }
+
+//    public ShoppingEntity update(final ShoppingEntity entity){
+//        validate(entity);
+//        final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
+//        if (orignal.isPresent()){
+//            final ShoppingEntity shopping = orignal.get();
+//            shopping.setTitle(entity.getTitle());
+//            shopping.setPrice(entity.getPrice());
+//            shopping.setTopic(entity.getTopic());
+//            shopping.setUserid(entity.getUserid());
+//            return repository.save(shopping);
+//        }
+//        return null;
+//    }
+
+//    public List<ShoppingEntity> update(final ShoppingEntity entity) {
+//        //validate(entity);
+//        List<ShoppingEntity> entities = repository.findByTitle(entity.getTitle());
+//
+//        for (ShoppingEntity foundEntity : entities) {
+//            // 엔터티를 삭제하기 전에 유효성 검사 등을 수행할 수 있음
+//            validate(foundEntity);
+//            try {
+//                System.out.print(foundEntity);
+//                log.info("Updating entity: {}", foundEntity);
+//                foundEntity.setTitle(entity.getTitle());
+//                foundEntity.setPrice(entity.getPrice());
+//                foundEntity.setTopic(entity.getTopic());
+//                foundEntity.setUserid(entity.getUserid());
+//                repository.save(foundEntity);
+//                System.out.print(foundEntity);
+//            } catch (Exception e) {
+//                log.error("Error deleting entity with ID: {}", foundEntity.getId(), e);
+//                throw new RuntimeException("Error deleting entity with ID: " + foundEntity.getId());
+//            }
+//        }
+//        return repository.findAll();
+//    }
+
+//    public List<ShoppingEntity> delete(final ShoppingEntity entity){
+//        final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
+//        final ShoppingEntity entities =orignal.get();
+//        entity.setTitle(entities.getTitle());
+//        validate(entity);
+//        try{
+//            repository.delete(entity);
+//        }
+//        catch(Exception e){
+//            log.error("error deleting entity", entity.getId(),e);
+//            throw new RuntimeException("error deleting entity"+entity.getId());
+//        }
+//        return retrieve();
+//    }
+
+    public List<ShoppingEntity> update(final ShoppingEntity entity) {
         validate(entity);
         final Optional<ShoppingEntity> orignal = repository.findById(entity.getId());
-        if (orignal.isPresent()){
+        if (orignal.isPresent()) {
             final ShoppingEntity shopping = orignal.get();
             shopping.setTitle(entity.getTitle());
             shopping.setPrice(entity.getPrice());
             shopping.setTopic(entity.getTopic());
-            return repository.save(shopping);
+            shopping.setUserid(entity.getUserid());
+            repository.save(shopping);
         }
-        return null;
-        //return repository.findById(entity.getId());
-        //return repository.findById(entity.getId());
+        return repository.findAll();
     }
-
-    public List<ShoppingEntity> delete(final ShoppingEntity entity){
-        validate(entity);
-        try{
-            repository.delete(entity);
+     public List<ShoppingEntity> delete(final ShoppingEntity entity) {
+        final List<ShoppingEntity> entities = repository.findByTitle(entity.getTitle()); // 해당하는 제목을 가진 엔터티들을 찾음
+        for (ShoppingEntity foundEntity : entities) {
+            // 엔터티를 삭제하기 전에 유효성 검사 등을 수행할 수 있음
+            validate(foundEntity);
+            try {
+                repository.delete(foundEntity); // 찾은 엔터티를 삭제
+            } catch (Exception e) {
+                log.error("Error deleting entity with ID: {}", foundEntity.getId(), e);
+                throw new RuntimeException("Error deleting entity with ID: " + foundEntity.getId());
+            }
         }
-        catch(Exception e){
-            log.error("error deleting entity", entity.getId(),e);
-            throw new RuntimeException("error deleting entity"+entity.getId());
-        }
-        return retrieve(entity.getUserId());
+        return retrieve(); // 엔터티 목록을 반환
     }
 
     public void validate(final ShoppingEntity entity){
@@ -94,9 +163,9 @@ public class ShoppingService {
             throw new RuntimeException("Entity cannot be null");
 
         }
-        if (entity.getUserId() == null){
-            log.warn("Unknown user.");
-            throw new RuntimeException("unknown user.");
-        }
+//        if (entity.getUserid() == null){
+//            log.warn("Unknown user.");
+//            throw new RuntimeException("Unknown user.");
+//        }
     }
 }
