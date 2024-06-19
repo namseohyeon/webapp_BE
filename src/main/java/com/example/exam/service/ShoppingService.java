@@ -152,6 +152,7 @@ public class ShoppingService {
             shopping.setTopic(entity.getTopic());
             shopping.setUserId(entity.getUserId());
             shopping.setLiked(entity.isLiked());
+            shopping.setUserName(entity.getUserName());
             repository.save(shopping);
         }
         return repository.findAll();
