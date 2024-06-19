@@ -11,5 +11,10 @@ import java.util.List;
 public interface ShoppingRepository extends JpaRepository<ShoppingEntity, String> {
     //List<ShoppingEntity> findByUserId(String userid);
     List<ShoppingEntity> findByTitle(String title);
+
+    List<ShoppingEntity> findByUserId(String userId);
     //Optinal<ShoppingEntity> findByTitle(String title);
+    List<ShoppingEntity> findByLiked(boolean like);
+
+    List<ShoppingEntity> findAllByOrderByPriceAsc();
 }

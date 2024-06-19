@@ -1,8 +1,12 @@
  package com.example.exam.controller;
+ import lombok.extern.slf4j.Slf4j;
 
+import com.example.exam.dto.UserDTO;
 import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +18,7 @@ import com.example.exam.model.ShoppingEntity;
 import com.example.exam.service.ShoppingService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -28,10 +33,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 
-
-
-
-@RestController
+@Slf4j
+ @RestController
 @RequestMapping("shopping")
 public class ShoppingController {
 
@@ -48,7 +51,7 @@ public class ShoppingController {
     // }    
     
     @PostMapping
-    public ResponseEntity<?> createitem(@RequestBody ShoppingDTO dto){
+    public ResponseEntity<?> createitem(@AuthenticationPrincipal String userId, @RequestBody ShoppingDTO dto){
         try{
         //String temporaryUserId = "seohyeonnam";
 
@@ -56,7 +59,7 @@ public class ShoppingController {
 
         entity.setId(null);
 
-        //entity.setUserId(temporaryUserId);
+        entity.setUserId(userId);
 
         List<ShoppingEntity> entities = service.create(entity);
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
@@ -72,9 +75,9 @@ public class ShoppingController {
     }
 
     @GetMapping
-    public ResponseEntity<?> retrieveitemlist() {
+    public ResponseEntity<?> retrieveitemlist(@AuthenticationPrincipal String userId) {
         //String temporaryUserId = "seohyeonnam";
-        List<ShoppingEntity> entities = service.retrieve();
+        List<ShoppingEntity> entities = service.retrieve(userId);
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
 
         ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
@@ -82,7 +85,27 @@ public class ShoppingController {
         return ResponseEntity.ok().body(response);
     }
 
-//    @GetMapping("/search")
+    @GetMapping("/like")
+    public ResponseEntity<?> retrieveLikeitemlist() {
+        //String temporaryUserId = "seohyeonnam";
+        List<ShoppingEntity> entities = service.retrieveLike();
+        List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
+
+        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
+        log.info("---",response);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/orderedByPrice")
+    public ResponseEntity<ResponseDTO<ShoppingDTO>> getAllItemsOrderedByPrice() {
+        List<ShoppingEntity> entities = service.getAllItemsOrderedByPrice();
+        List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
+        ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    //    @GetMapping("/search")
 //    public ResponseEntity<?> searchitem(@RequestBody ShoppingDTO dto) {
 //        // String temporaryUserId = "temporary-user";
 //        //String temporaryUserId = "seohyeonnam";
@@ -125,9 +148,10 @@ public class ShoppingController {
     // }
 
     @PutMapping
-    public ResponseEntity<?> updateitem(@RequestBody ShoppingDTO dto){
+    public ResponseEntity<?> updateitem(@AuthenticationPrincipal String userId, @RequestBody ShoppingDTO dto){
         //String temporaryUserId = "seohyeonnam";
         ShoppingEntity entity = ShoppingDTO.toEntity(dto);
+        entity.setUserId(userId);
         List<ShoppingEntity> entities = service.update(entity);
         List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());
         ResponseDTO<ShoppingDTO> response = ResponseDTO.<ShoppingDTO>builder().data(dtos).build();
@@ -135,11 +159,11 @@ public class ShoppingController {
     }
     
     @DeleteMapping
-    public ResponseEntity<?> deleteitem(@RequestBody ShoppingDTO dto){
+    public ResponseEntity<?> deleteitem(@AuthenticationPrincipal String userId,@RequestBody ShoppingDTO dto){
         try{
             //String temporaryUserId = "seohyeonnam";
             ShoppingEntity entity = ShoppingDTO.toEntity(dto); 
-            //entity.setUserId(temporaryUserId);
+            entity.setUserId(userId);
             System.out.println(entity);
             List<ShoppingEntity> entities = service.delete(entity);
             List<ShoppingDTO> dtos = entities.stream().map(ShoppingDTO::new).collect(Collectors.toList());

@@ -3,7 +3,9 @@ package com.example.exam.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.exam.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.exam.model.ShoppingEntity;
@@ -30,15 +32,26 @@ public class ShoppingService {
         repository.save(entity);
 
         log.info("Enity Id : {} is saved", entity.getId());
-        return repository.findAll();
+        return repository.findByUserId(entity.getUserId());
 
 
     }
 
-    public List<ShoppingEntity> retrieve(){
-        return repository.findAll();
+    public List<ShoppingEntity> retrieve(String userId){
+        return repository.findByUserId(userId);
 
     }
+
+    public List<ShoppingEntity> retrieveLike(){
+        return repository.findByLiked(true);
+
+    }
+
+    public List<ShoppingEntity> getAllItemsOrderedByPrice() {
+        return repository.findAllByOrderByPriceAsc();
+    }
+
+
 
     public List<ShoppingEntity> search(final String title){
         return repository.findByTitle(title);
@@ -137,7 +150,8 @@ public class ShoppingService {
             shopping.setTitle(entity.getTitle());
             shopping.setPrice(entity.getPrice());
             shopping.setTopic(entity.getTopic());
-            shopping.setUserid(entity.getUserid());
+            shopping.setUserId(entity.getUserId());
+            shopping.setLiked(entity.isLiked());
             repository.save(shopping);
         }
         return repository.findAll();
@@ -154,7 +168,7 @@ public class ShoppingService {
                 throw new RuntimeException("Error deleting entity with ID: " + foundEntity.getId());
             }
         }
-        return retrieve(); // 엔터티 목록을 반환
+        return retrieve(entity.getUserId()); // 엔터티 목록을 반환
     }
 
     public void validate(final ShoppingEntity entity){

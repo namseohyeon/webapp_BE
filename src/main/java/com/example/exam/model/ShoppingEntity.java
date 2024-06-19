@@ -26,6 +26,8 @@ public class ShoppingEntity{
     private String title;
     private int price;
     private String topic;
-    private String userid;
+    private String userId;
+    private boolean liked;
+    private String userName;
 
 }
